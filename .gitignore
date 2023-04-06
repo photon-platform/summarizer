@@ -1,0 +1,8 @@
+*.swp
+tags
+__pycache__
+.ipynb_checkpoints
+.doctrees
+*.egg-info/
+*.egg-info
+*.py[cod]
