@@ -9,8 +9,21 @@ import markdown
 from collections import Counter
 import re
 
+def generate_outline(soup):
+    """Generates an outline (table of contents) from the headings in a BeautifulSoup object."""
+    outline = []
 
-def extract_keywords(soup, count=5):
+    for heading in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+        level = int(heading.name[1])
+        title = heading.text.strip()
+        item = {'level': level, 'title': title}
+
+        outline.append(item)
+
+    return outline
+
+
+def extract_keywords(soup):
     """Extracts likely keywords from a BeautifulSoup object and returns the top `count` keywords as a list."""
     # Extract text content from soup object
     text = ' '.join(soup.stripped_strings)
@@ -28,7 +41,7 @@ def extract_keywords(soup, count=5):
 
     # Count occurrences of each word and return top `count` words
     word_counts = Counter(words)
-    top_words = [word for word, count in word_counts.most_common(count)]
+    #  top_words = [word for word, count in word_counts.most_common(count)]
 
     return word_counts
 
@@ -150,11 +163,14 @@ def main(url):
 
     keywords = extract_keywords(main_content)
     file_name = os.path.join(folder_name, f'keywords.json')
-
     with open(file_name, 'w') as file:
         #  file.write(str(keywords))
         json.dump(keywords, file, indent=4)
     
+    outline = generate_outline(main_content)
+    file_name = os.path.join(folder_name, f'outline.json')
+    with open(file_name, 'w') as file:
+        json.dump(outline, file, indent=4)
 
 
 if __name__ == "__main__":
