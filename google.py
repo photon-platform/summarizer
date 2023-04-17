@@ -23,6 +23,7 @@ from googleapiclient.http import MediaIoBaseDownload
 
 scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
+
 def main():
     # Disable OAuthlib's HTTPS verification when running locally.
     # *DO NOT* leave this option enabled in production.
@@ -30,19 +31,19 @@ def main():
 
     api_service_name = "youtube"
     api_version = "v3"
-    client_secrets_file = Path.home() / '.private/google-geometor-oauth.json'
+    client_secrets_file = Path.home() / ".private/google-geometor-oauth.json"
 
     # Get credentials and create an API client
     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
-        client_secrets_file, scopes)
+        client_secrets_file, scopes
+    )
     #  credentials = flow.run_console()
     credentials = flow.from_client_secrets_file
     youtube = googleapiclient.discovery.build(
-        api_service_name, api_version, credentials=credentials)
-
-    request = youtube.captions().download(
-        id="YOUR_CAPTION_TRACK_ID"
+        api_service_name, api_version, credentials=credentials
     )
+
+    request = youtube.captions().download(id="YOUR_CAPTION_TRACK_ID")
     # TODO: For this request to work, you must replace "YOUR_FILE"
     #       with the location where the downloaded content should be written.
     fh = io.FileIO("YOUR_FILE", "wb")
@@ -50,7 +51,7 @@ def main():
     download = MediaIoBaseDownload(fh, request)
     complete = False
     while not complete:
-      status, complete = download.next_chunk()
+        status, complete = download.next_chunk()
 
 
 if __name__ == "__main__":
